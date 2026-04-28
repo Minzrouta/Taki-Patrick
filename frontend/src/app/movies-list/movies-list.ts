@@ -3,13 +3,12 @@ import { Observable } from 'rxjs';
 import { Movie } from '../models/movie';
 import { MoviesApi } from '../services/movies-api';
 import { AsyncPipe, DatePipe } from '@angular/common';
-import { MovieCard } from '../home/movie-card/movie-card';
 import { Router, RouterLink, RouterOutlet } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-movies-list',
-  imports: [AsyncPipe, DatePipe, MovieCard, RouterLink, RouterOutlet],
+  imports: [AsyncPipe, DatePipe, RouterLink, RouterOutlet],
   templateUrl: './movies-list.html',
   styleUrl: './movies-list.scss',
 })

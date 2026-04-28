@@ -1,6 +1,16 @@
 {
   "/movies": {
-    "target": "http://localhost:8080",
+    "target": "http://localhost:4280",
+    "secure": false,
+    "changeOrigin": true
+  },
+  "/users": {
+    "target": "http://localhost:4280",
+    "secure": false,
+    "changeOrigin": true
+  },
+  "/reviews": {
+    "target": "http://localhost:4280",
     "secure": false,
     "changeOrigin": true
   }

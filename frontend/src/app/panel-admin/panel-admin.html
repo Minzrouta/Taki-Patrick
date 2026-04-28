@@ -1,0 +1,8 @@
+<div class="stat-grid">
+    @for (stat of items; track stat.title) {
+    <app-stats-card [stat]=stat></app-stats-card>
+    }
+</div>
+<div class="div-button">
+    <button class="btn btn-warning" routerLink="/movies">Liste des films</button>
+</div>

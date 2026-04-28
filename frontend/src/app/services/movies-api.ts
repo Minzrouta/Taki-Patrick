@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { Movie } from '../models/movie';
 import { MovieSearchResult } from '../models/movie-search-result';
 import { MovieSuggestion } from '../models/movie-suggestion';
+import { Review } from '../models/review';
 
 @Injectable({
   providedIn: 'root',
@@ -47,5 +48,8 @@ export class MoviesApi {
     const form = new FormData();
     form.append('filmImage', file);
     return this.httpClient.put<void>(`${this.url}/${id}/image`, form);
+  }
+  getMoviesReviews(id: number): Observable<Review[]> {
+    return this.httpClient.get<Review[]>(`${this.url}/${id}/reviews`);
   }
 }

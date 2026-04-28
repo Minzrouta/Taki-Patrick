@@ -1,0 +1,35 @@
+    .stat-card {
+        background: #ffffff;
+        border-radius: 14px;
+        padding: 1.25rem 1rem 1rem;
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 4px;
+    }
+
+    .stat-label {
+        font-size: 15px;
+        color: #111;
+        font-weight: 700;
+        line-height: 1.4;
+    }
+
+    .stat-label span {
+        color: #E6A817;
+    }
+
+    .stat-value {
+        font-size: 52px;
+        font-weight: 700;
+        color: #E6A817;
+        line-height: 1.1;
+        margin-top: 4px;
+    }
+
+    .stat-note {
+        font-size: 12px;
+        color: #888;
+        margin-top: 4px;
+    }
