@@ -1,56 +1,68 @@
-import { Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { Movie } from '../models/movie';
-import { FormsModule } from '@angular/forms';
 import { MoviesApi } from '../services/movies-api';
 import { Router } from '@angular/router';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-add-movie',
-  imports: [FormsModule],
+  imports: [ReactiveFormsModule],
   templateUrl: './add-movie.html',
   styleUrl: './add-movie.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AddMovie {
-  constructor(private router: Router) {}
-
-  movie: Movie = {
-    title: '',
-    director: '',
-    releaseDate: new Date(),
-    synopsis: '',
-    id: undefined,
-    rate: undefined,
-    image: undefined,
-  };
-
-  searchTitle = '';
-  searching = false;
-  searchError = '';
-
+  private readonly router = inject(Router);
   private readonly moviesApi = inject(MoviesApi);
 
-  searchMovie(): void {
-    if (!this.searchTitle.trim()) return;
-    this.searching = true;
-    this.searchError = '';
+  searchControl = new FormControl('');
+  searching = signal(false);
+  searchError = signal('');
+  posterUrl = signal<string | undefined>(undefined);
 
-    this.moviesApi.searchMovieByTitle(this.searchTitle).subscribe({
+  movieForm = new FormGroup({
+    title:       new FormControl('', [Validators.required]),
+    director:    new FormControl('', [Validators.required]),
+    releaseDate: new FormControl('', [Validators.required]),
+    synopsis:    new FormControl('', [Validators.required]),
+  });
+
+  searchMovie(): void {
+    const title = this.searchControl.value?.trim();
+    if (!title) return;
+    this.searching.set(true);
+    this.searchError.set('');
+
+    this.moviesApi.searchMovieByTitle(title).subscribe({
       next: (result) => {
-        this.movie.title = result.title;
-        this.movie.director = result.director ?? '';
-        this.movie.synopsis = result.synopsis ?? '';
-        this.movie.releaseDate = result.releaseDate ? new Date(result.releaseDate) : new Date();
-        this.movie.image = result.posterUrl ?? undefined;
-        this.searching = false;
+        this.movieForm.patchValue({
+          title:       result.title,
+          director:    result.director ?? '',
+          synopsis:    result.synopsis ?? '',
+          releaseDate: result.releaseDate
+            ? new Date(result.releaseDate).toISOString().split('T')[0]
+            : '',
+        });
+        this.posterUrl.set(result.posterUrl ?? undefined);
+        this.searching.set(false);
       },
       error: () => {
-        this.searchError = 'Film non trouvé. Remplis les champs manuellement.';
-        this.searching = false;
+        this.searchError.set('Film non trouvé. Remplis les champs manuellement.');
+        this.searching.set(false);
       },
     });
   }
 
   addMovie(): void {
-    this.moviesApi.addMovie(this.movie).subscribe(() => this.router.navigate(['/movies']));
+    if (this.movieForm.invalid) return;
+    const { title, director, releaseDate, synopsis } = this.movieForm.value;
+    const movie: Movie = {
+      title:       title!,
+      director:    director!,
+      releaseDate: new Date(releaseDate!),
+      synopsis:    synopsis!,
+      image:       this.posterUrl(),
+    };
+    this.moviesApi.addMovie(movie).subscribe(() => this.router.navigate(['/movies']));
   }
 }
