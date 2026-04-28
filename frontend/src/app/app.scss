@@ -1,6 +1,7 @@
 @use 'ngx-toastr/toastr';
 
-html, body {
+html,
+body {
   height: 100%;
   margin: 0;
   padding: 0;
@@ -55,7 +56,8 @@ table {
       border-bottom: none;
     }
 
-    td, th {
+    td,
+    th {
       padding: 12px 16px;
       font-size: 13px;
       color: #4a3f5c;
@@ -83,13 +85,15 @@ table {
     transform: scale(0.97);
   }
 
-  &.btn-warning, &.editButton {
+  &.btn-warning,
+  &.editButton {
     background: #BDE0FE;
     color: #2a5f8a;
     margin-right: 6px;
   }
 
-  &.btn-danger, &.deleteButton {
+  &.btn-danger,
+  &.deleteButton {
     background: #FFAFCC;
     color: #7a2a4a;
   }
