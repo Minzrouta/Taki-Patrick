@@ -13,4 +13,5 @@ export const routes: Routes = [
     { path: 'edit-movie/:id', component: EditMovie },
     { path: 'admin', component: PanelAdmin },
     { path: 'profile', component: ProfilePage },
+    { path: 'profile/:id', component: ProfilePage },
 ];

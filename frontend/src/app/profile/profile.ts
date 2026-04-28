@@ -1,10 +1,12 @@
 import { ChangeDetectionStrategy, Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { of, switchMap } from 'rxjs';
+import { combineLatest, of, switchMap } from 'rxjs';
 import { Review } from '../models/review';
 import { User } from '../models/user';
 import { AuthService } from '../services/auth.service';
 import { ReviewsApi } from '../services/reviews-api';
+import { UsersApi } from '../services/user-api';
 
 @Component({
   selector: 'app-profile',
@@ -17,26 +19,40 @@ import { ReviewsApi } from '../services/reviews-api';
 export class ProfilePage implements OnInit {
   private readonly auth = inject(AuthService);
   private readonly reviewsApi = inject(ReviewsApi);
-  // inject DestroyRef in injection context, pass to takeUntilDestroyed inside pipe
+  private readonly usersApi = inject(UsersApi);
+  private readonly route = inject(ActivatedRoute);
   private readonly destroyRef = inject(DestroyRef);
 
   user = signal<User | null>(null);
   reviews = signal<Review[]>([]);
   loading = signal(true);
+  isOwnProfile = signal(true);
   readonly stars = [1, 2, 3, 4, 5];
 
   ngOnInit(): void {
-    this.auth.currentUser$
+    combineLatest([this.route.params, this.auth.currentUser$])
       .pipe(
         takeUntilDestroyed(this.destroyRef),
-        switchMap((u) => {
-          this.user.set(u);
+        switchMap(([params, currentUser]) => {
+          const routeId = params['id'] ? Number(params['id']) : null;
+          const targetId = routeId ?? currentUser?.id ?? null;
+          this.isOwnProfile.set(!routeId || routeId === currentUser?.id);
           this.loading.set(true);
-          return u?.id ? this.reviewsApi.getReviewsByUser(u.id) : of<Review[]>([]);
+
+          if (!targetId) return of({ user: null, reviews: [] as Review[] });
+
+          const user$ = routeId && routeId !== currentUser?.id
+            ? this.usersApi.getUserById(targetId)
+            : of(currentUser);
+
+          return combineLatest([user$, this.reviewsApi.getReviewsByUser(targetId)]).pipe(
+            switchMap(([u, reviews]) => of({ user: u, reviews })),
+          );
         }),
       )
       .subscribe({
-        next: (reviews) => {
+        next: ({ user, reviews }) => {
+          this.user.set(user);
           this.reviews.set(reviews);
           this.loading.set(false);
         },

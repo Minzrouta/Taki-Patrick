@@ -11,7 +11,7 @@
     <h4 class="mb-3">Films notés ({{ reviews().length }})</h4>
 
     @if (reviews().length === 0) {
-      <p class="text-muted">Tu n'as pas encore noté de film.</p>
+      <p class="text-muted">{{ isOwnProfile() ? 'Tu n\'as pas encore noté de film.' : 'Cet utilisateur n\'a pas encore noté de film.' }}</p>
     } @else {
       <div class="d-flex flex-wrap gap-3">
         @for (review of reviews(); track review.id) {
@@ -40,6 +40,6 @@
     }
 
   } @else {
-    <p>Tu dois être connecté pour voir ton profil.</p>
+    <p>Utilisateur introuvable.</p>
   }
 </div>

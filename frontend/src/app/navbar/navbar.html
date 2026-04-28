@@ -5,7 +5,7 @@
 
     <div class="ms-auto d-flex align-items-center gap-2">
         @if (auth.currentUser$ | async; as user) {
-        <a class="navbar-text text-decoration-none" routerLink="/profile">
+        <a class="navbar-text text-decoration-none" [routerLink]="['/profile', user.id]">
           {{ user.firstName }} {{ user.lastName }}
         </a>
         <button class="btn btn-outline-secondary btn-sm" (click)="auth.signOut()">
