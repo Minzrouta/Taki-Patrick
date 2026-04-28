@@ -3,25 +3,38 @@ import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Review } from '../models/review';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable({ providedIn: 'root' })
 export class ReviewsApi {
-  private readonly httpClient = inject(HttpClient)
-  private readonly url = "/reviews"
+  private readonly http = inject(HttpClient);
+  private readonly url = '/reviews';
+
   getReviews(): Observable<Review[]> {
-    return this.httpClient.get<Review[]>(this.url);
+    return this.http.get<Review[]>(this.url);
   }
-  // addMovie(movie: Movie): Observable<Movie> {
-  //   return this.httpClient.post<Movie>(this.url, movie);
-  // }
-  // deleteMovie(id: number): Observable<void> {
-  //   return this.httpClient.delete<void>(`${this.url}/${id}`);
-  // }
-  // editMovie(id: number, movie: Movie): Observable<void> {
-  //   return this.httpClient.put<void>(`${this.url}/${id}`, movie);
-  // }
-  // getMovie(id: number): Observable<Movie> {
-  //   return this.httpClient.get<Movie>(`${this.url}/${id}`);
-  // }
+
+  getReviewsByUser(userId: number): Observable<Review[]> {
+    return this.http.get<Review[]>(`/users/${userId}/reviews`);
+  }
+
+  getReviewsByMovie(movieId: number): Observable<Review[]> {
+    return this.http.get<Review[]>(`/movies/${movieId}/reviews`);
+  }
+
+  checkReview(userId: number, filmId: number): Observable<boolean> {
+    return this.http.get<boolean>(`${this.url}/checkAvis`, {
+      params: { userId: userId.toString(), filmId: filmId.toString() },
+    });
+  }
+
+  addReview(review: Partial<Review>): Observable<Review> {
+    return this.http.post<Review>(this.url, review);
+  }
+
+  updateReview(id: number, review: Partial<Review>): Observable<Review> {
+    return this.http.put<Review>(`${this.url}/${id}`, review);
+  }
+
+  deleteReview(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.url}/${id}`);
+  }
 }
