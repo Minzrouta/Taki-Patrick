@@ -8,7 +8,7 @@ import { Movie } from '../models/movie';
 })
 export class MoviesApi {
   private readonly httpClient = inject(HttpClient)
-  private readonly url = "http://localhost:8080/movies"
+  private readonly url = "/movies"
   getMovies(): Observable<Movie[]> {
     return this.httpClient.get<Movie[]>(this.url);
   }
