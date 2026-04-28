@@ -1,5 +1,49 @@
 :host {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
+  display: block;
+  padding: 32px 28px;
+}
+
+.card {
+  background: transparent;
+  border: none;
+  padding: 0;
+}
+
+/* PrimeNG carousel overrides */
+:host ::ng-deep {
+  .p-carousel {
+    .p-carousel-indicators {
+      .p-carousel-indicator button {
+        background: #CDB4DB;
+        border-radius: 50%;
+        width: 8px;
+        height: 8px;
+        border: none;
+        transition: background 0.2s;
+      }
+
+      .p-carousel-indicator.p-highlight button {
+        background: #FFAFCC;
+        width: 20px;
+        border-radius: 4px;
+      }
+    }
+
+    .p-carousel-prev,
+    .p-carousel-next {
+      color: #CDB4DB;
+      background: white;
+      border: 1.5px solid #FFC8DD;
+      border-radius: 50%;
+      width: 36px;
+      height: 36px;
+      transition: background 0.2s, transform 0.15s;
+
+      &:hover {
+        background: #FFC8DD;
+        color: white;
+        transform: scale(1.08);
+      }
+    }
+  }
 }

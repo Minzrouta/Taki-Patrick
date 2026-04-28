@@ -1,35 +1,51 @@
-    .stat-card {
-        background: #ffffff;
-        border-radius: 14px;
-        padding: 1.25rem 1rem 1rem;
-        text-align: center;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 4px;
-    }
+:host {
+  display: block;
+}
 
-    .stat-label {
-        font-size: 15px;
-        color: #111;
-        font-weight: 700;
-        line-height: 1.4;
-    }
+.stat-card {
+  background: white;
+  border-radius: 16px;
+  padding: 1.5rem 1rem;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  border: 1px solid rgba(255, 200, 221, 0.4);
+  box-shadow: 0 2px 16px rgba(205, 180, 219, 0.15);
+  transition: transform 0.2s, box-shadow 0.2s;
 
-    .stat-label span {
-        color: #E6A817;
-    }
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 24px rgba(205, 180, 219, 0.25);
+  }
+}
 
-    .stat-value {
-        font-size: 52px;
-        font-weight: 700;
-        color: #E6A817;
-        line-height: 1.1;
-        margin-top: 4px;
-    }
+.stat-label {
+  font-size: 14px;
+  color: #6b5f7a;
+  font-weight: 600;
+  line-height: 1.4;
 
-    .stat-note {
-        font-size: 12px;
-        color: #888;
-        margin-top: 4px;
-    }
+  span {
+    color: #CDB4DB;
+    font-weight: 700;
+  }
+}
+
+.stat-value {
+  font-size: 52px;
+  font-weight: 700;
+  background: linear-gradient(135deg, #CDB4DB, #FFAFCC);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  line-height: 1.1;
+  margin-top: 4px;
+}
+
+.stat-note {
+  font-size: 12px;
+  color: #9b8faa;
+  margin-top: 4px;
+}
