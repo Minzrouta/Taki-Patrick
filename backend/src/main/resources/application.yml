@@ -8,3 +8,6 @@ spring:
     multipart:
       max-file-size: 1MB
       max-request-size: 1MB
+
+tmdb:
+  api-key: ${TMDB_API_KEY:4887a63210a53c9c70d617320b1fba4d}
