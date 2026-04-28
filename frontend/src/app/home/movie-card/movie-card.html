@@ -1,5 +1,5 @@
 <div class="card shadow m-4" style="width: 18rem; min-height: 55rem">
-  @if (movie.image) {
+    @if (movie.image) {
     <img [src]="'/movies/' + movie.id + '/image'" class="card-img-top" alt="" />
   }
   <div class="card-body d-flex flex-column">
@@ -14,5 +14,16 @@
         {{ existingReview ? 'Modifier ma note' : 'Noter' }}
       </button>
     }
-  </div>
+    <div class="card-body d-flex flex-column">
+        <h5 class="card-title">{{ movie.title }}</h5>
+        <p class="card-text flex-grow-1">{{ movie.synopsis }}</p>
+        <label class="note mb-2">Note: {{ movie.rate ?? 'N/A' }}</label>
+
+        @if (auth.currentUser$ | async) {
+        <button class="btn btn-sm btn-outline-warning mt-auto" (click)="openReview.emit()">
+            <i class="bi bi-star me-1"></i>
+            {{ existingReview ? 'Modifier ma note' : 'Noter' }}
+        </button>
+        }
+    </div>
 </div>
