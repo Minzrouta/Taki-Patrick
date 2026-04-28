@@ -1,10 +1,29 @@
 <div class="card shadow m-4" style="width: 18rem; min-height: 55rem">
-    @if(movie.image) {
-    <img [src]="'/movies/' + movie.id + '/image'" class="card-img-top" alt="">
+  @if (movie.image) {
+    <img [src]="'/movies/' + movie.id + '/image'" class="card-img-top" alt="" />
+  }
+  <div class="card-body d-flex flex-column">
+    <h5 class="card-title">{{ movie.title }}</h5>
+    <p class="card-text flex-grow-1">{{ movie.synopsis }}</p>
+    <label class="note mb-2">Note: {{ movie.rate ?? '—' }}</label>
+
+    @if (auth.currentUser$ | async; as user) {
+      <button class="btn btn-sm btn-outline-warning mt-auto"
+              (click)="showModal.set(true)">
+        <i class="bi bi-star me-1"></i>
+        {{ existingReview() ? 'Modifier ma note' : 'Noter' }}
+      </button>
     }
-    <div class="card-body">
-        <h5 class="card-title">{{movie.title}}</h5>
-        <p class="card-text">{{movie.synopsis}}</p>
-        <label class="note">Note: {{movie.rate}}</label>
-    </div>
+  </div>
 </div>
+
+@if (showModal()) {
+  @if (auth.currentUser$ | async; as user) {
+    <app-review-modal
+      [movie]="movie"
+      [currentUser]="user"
+      [existingReview]="existingReview()"
+      (reviewed)="onReviewed()"
+      (closed)="showModal.set(false)" />
+  }
+}

@@ -14,6 +14,10 @@ export class AuthService {
   private readonly currentUserSubject = new BehaviorSubject<User | null>(null);
   readonly currentUser$ = this.currentUserSubject.asObservable();
 
+  get currentUser(): User | null {
+    return this.currentUserSubject.getValue();
+  }
+
   constructor() {
     authState(this.auth).subscribe(async (firebaseUser) => {
       if (!firebaseUser) {
