@@ -1,9 +1,22 @@
 <div class="card">
-
-    <p-carousel [value]="movies" [numVisible]="3" [numScroll]="1" [circular]="true"
-        [responsiveOptions]="responsiveOptions" autoplayInterval="3000">
-        <ng-template let-movie #item>
-            <app-movie-card [movie]=movie></app-movie-card>
-        </ng-template>
-    </p-carousel>
+  <p-carousel [value]="movies" [numVisible]="3" [numScroll]="1" [circular]="true"
+      [responsiveOptions]="responsiveOptions" autoplayInterval="3000">
+    <ng-template let-movie #item>
+      <app-movie-card
+        [movie]="movie"
+        [existingReview]="movie.id != null ? (reviewMap()[movie.id] ?? null) : null"
+        (openReview)="onOpenReview(movie)" />
+    </ng-template>
+  </p-carousel>
 </div>
+
+@if (pendingMovie(); as movie) {
+  @if (auth.currentUser$ | async; as user) {
+    <app-review-modal
+      [movie]="movie"
+      [currentUser]="user"
+      [existingReview]="movie.id != null ? (reviewMap()[movie.id] ?? null) : null"
+      (reviewed)="onReviewed()"
+      (closed)="pendingMovie.set(null)" />
+  }
+}
