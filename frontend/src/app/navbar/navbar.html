@@ -1,7 +1,7 @@
 <nav class="navbar-pipou">
     <a class="navbar-brand">{{ title | titlecase }}</a>
     <a class="nav-item nav-link" routerLink="/">Accueil</a>
-    <a class="nav-item nav-link ms-3" routerLink="/admin">Panel Admin</a>
+    <a class="nav-item nav-link ms-3" routerLink="/admin">Gestion</a>
 
     <div class="ms-auto d-flex align-items-center gap-2">
         @if (auth.currentUser$ | async; as user) {
