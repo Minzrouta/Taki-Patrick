@@ -23,6 +23,8 @@ services:
       context: ./frontend
     ports:
       - "4280:80"
+    networks:
+      - db
     restart: unless-stopped
 
   database:
