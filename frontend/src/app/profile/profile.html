@@ -25,7 +25,7 @@
               <p class="card-title fw-bold mb-1 profile-movie-title">
                 {{ review.movie?.title }}
               </p>
-              <span class="text-warning">
+              <span class="text" style="color: #CDB4DB;">
                 @for (i of stars; track i) {
                   <i class="bi"
                      [class]="review.rate >= i ? 'bi-star-fill' : review.rate >= i - 0.5 ? 'bi-star-half' : 'bi-star'">

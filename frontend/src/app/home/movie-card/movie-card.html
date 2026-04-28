@@ -8,7 +8,7 @@
     <label class="note mb-2">Note: {{ movie.rate ?? '—' }}</label>
 
     @if (auth.currentUser$ | async) {
-      <button class="btn btn-sm btn-outline-warning mt-auto"
+      <button class="btn btn-sm btn-outline mt-auto" style="color: #CDB4DB;"
               (click)="openReview.emit()">
         <i class="bi bi-star me-1"></i>
         {{ existingReview ? 'Modifier ma note' : 'Noter' }}
