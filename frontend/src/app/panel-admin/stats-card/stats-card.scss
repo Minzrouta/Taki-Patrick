@@ -11,12 +11,9 @@
   flex-direction: column;
   align-items: center;
   gap: 4px;
-  border: 1px solid rgba(255, 200, 221, 0.4);
-  box-shadow: 0 2px 16px rgba(205, 180, 219, 0.15);
   transition: transform 0.2s, box-shadow 0.2s;
 
   &:hover {
-    transform: translateY(-2px);
     box-shadow: 0 6px 24px rgba(205, 180, 219, 0.25);
   }
 }
