@@ -5,6 +5,6 @@
     <div class="card-body">
         <h5 class="card-title">{{movie.title}}</h5>
         <p class="card-text">{{movie.synopsis}}</p>
-        <label class="note">Note: {{movie.rate}}</label>
+        <label class="note">Note: {{movie.rate ?? 'N/A' }}</label>
     </div>
 </div>
