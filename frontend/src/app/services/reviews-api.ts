@@ -8,7 +8,7 @@ import { Review } from '../models/review';
 })
 export class ReviewsApi {
   private readonly httpClient = inject(HttpClient)
-  private readonly url = "http://localhost:8080/reviews"
+  private readonly url = "/reviews"
   getReviews(): Observable<Review[]> {
     return this.httpClient.get<Review[]>(this.url);
   }
