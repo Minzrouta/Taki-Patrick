@@ -1,13 +1,43 @@
 <div class="form-all d-flex w-100">
     <div class="form-movie flex-column w-50">
+
+        <div class="search-section">
+            <label for="search">Rechercher un film automatiquement</label>
+            <div class="search-row">
+                <input
+                    type="text"
+                    id="search"
+                    name="search"
+                    [(ngModel)]="searchTitle"
+                    placeholder="Ex: Inception, Avatar..."
+                    (keydown.enter)="searchMovie()"
+                />
+                <button class="btn btn-secondary" (click)="searchMovie()" [disabled]="searching">
+                    {{ searching ? 'Recherche...' : 'Rechercher' }}
+                </button>
+            </div>
+            @if (searchError) {
+                <p class="search-error">{{ searchError }}</p>
+            }
+        </div>
+
+        <hr />
+
         <label for="title">Titre</label>
         <input type="text" id="title" name="title" [(ngModel)]="movie.title" />
         <label for="releaseDate">Date de réalisation</label>
         <input type="date" id="releaseDate" name="releaseDate" [(ngModel)]="movie.releaseDate" />
-        <label for="director">Directeur</label>
+        <label for="director">Réalisateur</label>
         <input type="text" id="director" name="director" [(ngModel)]="movie.director" />
         <label for="synopsis">Synopsis</label>
-        <input type="text" id="synopsis" name="synopsis" [(ngModel)]="movie.synopsis" />
-        <button class="btn btn-warning" (click)=addMovie()>Ajouter</button>
+        <textarea id="synopsis" name="synopsis" [(ngModel)]="movie.synopsis" rows="4"></textarea>
+
+        @if (movie.image) {
+            <div class="poster-preview">
+                <img [src]="movie.image" alt="Affiche du film" />
+            </div>
+        }
+
+        <button class="btn btn-warning" (click)="addMovie()">Ajouter</button>
     </div>
 </div>

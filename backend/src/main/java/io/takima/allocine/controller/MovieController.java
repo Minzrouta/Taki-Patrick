@@ -1,12 +1,16 @@
 package io.takima.allocine.controller;
 
 import io.takima.allocine.model.Movie;
+import io.takima.allocine.model.MovieSearchResultDTO;
+import io.takima.allocine.model.MovieSuggestionDTO;
 import io.takima.allocine.model.Review;
 import io.takima.allocine.service.MovieService;
 import io.takima.allocine.service.ReviewService;
+import io.takima.allocine.service.TmdbService;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -17,10 +21,46 @@ public class MovieController {
 
     private final MovieService movieService;
     private final ReviewService reviewService;
+    private final TmdbService tmdbService;
 
-    public MovieController(MovieService movieService, ReviewService reviewService) {
+    public MovieController(MovieService movieService, ReviewService reviewService, TmdbService tmdbService) {
         this.movieService = movieService;
         this.reviewService = reviewService;
+        this.tmdbService = tmdbService;
+    }
+
+    /**
+     * Recherche les infos complètes d'un film via TMDB à partir de son titre
+     */
+    @GetMapping("/search")
+    public MovieSearchResultDTO searchMovie(@RequestParam String title) {
+        return tmdbService.searchMovie(title)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Film non trouvé sur TMDB"));
+    }
+
+    /**
+     * Retourne des suggestions de films (autocomplete) à partir d'un texte
+     */
+    @GetMapping("/suggestions")
+    public List<MovieSuggestionDTO> getSuggestions(@RequestParam String query) {
+        return tmdbService.searchSuggestions(query);
+    }
+
+    /**
+     * Retourne les films populaires du moment
+     */
+    @GetMapping("/popular")
+    public List<MovieSuggestionDTO> getPopularMovies() {
+        return tmdbService.getPopularMovies();
+    }
+
+    /**
+     * Retourne les infos complètes d'un film via son id TMDB
+     */
+    @GetMapping("/tmdb/{tmdbId}")
+    public MovieSearchResultDTO getMovieByTmdbId(@PathVariable Long tmdbId) {
+        return tmdbService.getMovieByTmdbId(tmdbId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Film non trouvé sur TMDB"));
     }
 
     /**

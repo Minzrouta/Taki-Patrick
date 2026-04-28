@@ -4,7 +4,7 @@
     justify-content: center;
 }
 
-input {
+input, textarea {
     margin: 5px 0px;
 }
 
@@ -15,4 +15,36 @@ button {
 .form-all {
     display: flex;
     justify-content: center;
+}
+
+.search-section {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 10px;
+}
+
+.search-row {
+    display: flex;
+    gap: 8px;
+    margin-top: 4px;
+
+    input {
+        flex: 1;
+        margin: 0;
+    }
+}
+
+.search-error {
+    color: #dc3545;
+    font-size: 0.85rem;
+    margin-top: 4px;
+}
+
+.poster-preview {
+    margin: 10px 0;
+
+    img {
+        max-width: 120px;
+        border-radius: 4px;
+    }
 }
