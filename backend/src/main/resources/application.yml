@@ -1,0 +1,10 @@
+spring:
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://database:5432/defaultdb}
+    username: ${DB_USERNAME:root}
+    password: ${DB_PASSWORD:toor}
+    driver-class-name: org.postgresql.Driver
+  servlet:
+    multipart:
+      max-file-size: 1MB
+      max-request-size: 1MB

@@ -1,0 +1,13 @@
+<div class="form-all d-flex w-100">
+    <div class="form-movie flex-column w-50">
+        <label for="title">Titre</label>
+        <input type="text" id="title" name="title" [(ngModel)]="movie.title" />
+        <label for="releaseDate">Date de réalisation</label>
+        <input type="date" id="releaseDate" name="releaseDate" [(ngModel)]="movie.releaseDate" />
+        <label for="director">Directeur</label>
+        <input type="text" id="director" name="director" [(ngModel)]="movie.director" />
+        <label for="synopsis">Synopsis</label>
+        <input type="text" id="synopsis" name="synopsis" [(ngModel)]="movie.synopsis" />
+        <button class="btn btn-warning" (click)=addMovie()>Ajouter</button>
+    </div>
+</div>

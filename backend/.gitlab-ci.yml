@@ -1,0 +1,14 @@
+include:
+  - project: "taki-infra/template-ci"
+    ref: main
+    file: "templates/backend/.backend-mvn-jdk-21.yml"
+variables:
+  TARGET_APP_NAME: api
+
+build:
+  variables:
+    SIZE: small
+
+test:
+  variables:
+    SIZE: small
