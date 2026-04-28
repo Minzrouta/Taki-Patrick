@@ -7,37 +7,69 @@
                 <input
                     type="text"
                     id="search"
-                    name="search"
-                    [(ngModel)]="searchTitle"
+                    [formControl]="searchControl"
                     placeholder="Ex: Inception, Avatar..."
                     (keydown.enter)="searchMovie()"
                 />
-                <button class="btn btn-secondary" (click)="searchMovie()" [disabled]="searching">
-                    {{ searching ? 'Recherche...' : 'Rechercher' }}
+                <button class="btn btn-secondary" (click)="searchMovie()" [disabled]="searching()">
+                    {{ searching() ? 'Recherche...' : 'Rechercher' }}
                 </button>
             </div>
-            @if (searchError) {
-                <p class="search-error">{{ searchError }}</p>
+            @if (searchError()) {
+                <p class="search-error">{{ searchError() }}</p>
             }
         </div>
 
         <hr />
 
-        <label for="title">Titre</label>
-        <input type="text" id="title" name="title" [(ngModel)]="movie.title" />
-        <label for="releaseDate">Date de réalisation</label>
-        <input type="date" id="releaseDate" name="releaseDate" [(ngModel)]="movie.releaseDate" />
-        <label for="director">Réalisateur</label>
-        <input type="text" id="director" name="director" [(ngModel)]="movie.director" />
-        <label for="synopsis">Synopsis</label>
-        <textarea id="synopsis" name="synopsis" [(ngModel)]="movie.synopsis" rows="4"></textarea>
-
-        @if (movie.image) {
-            <div class="poster-preview">
-                <img [src]="movie.image" alt="Affiche du film" />
+        <form [formGroup]="movieForm" (ngSubmit)="addMovie()">
+            <div>
+                <label for="title">Titre</label>
+                <input type="text" id="title" formControlName="title" />
+                @if (movieForm.get('title')?.invalid && movieForm.get('title')?.touched) {
+                    <ul class="error-list">
+                        <li>Le titre est obligatoire</li>
+                    </ul>
+                }
             </div>
-        }
 
-        <button class="btn btn-warning" (click)="addMovie()">Ajouter</button>
+            <div>
+                <label for="releaseDate">Date de réalisation</label>
+                <input type="date" id="releaseDate" formControlName="releaseDate" />
+                @if (movieForm.get('releaseDate')?.invalid && movieForm.get('releaseDate')?.touched) {
+                    <ul class="error-list">
+                        <li>La date est obligatoire</li>
+                    </ul>
+                }
+            </div>
+
+            <div>
+                <label for="director">Réalisateur</label>
+                <input type="text" id="director" formControlName="director" />
+                @if (movieForm.get('director')?.invalid && movieForm.get('director')?.touched) {
+                    <ul class="error-list">
+                        <li>Le réalisateur est obligatoire</li>
+                    </ul>
+                }
+            </div>
+
+            <div>
+                <label for="synopsis">Synopsis</label>
+                <textarea id="synopsis" formControlName="synopsis" rows="4"></textarea>
+                @if (movieForm.get('synopsis')?.invalid && movieForm.get('synopsis')?.touched) {
+                    <ul class="error-list">
+                        <li>Le synopsis est obligatoire</li>
+                    </ul>
+                }
+            </div>
+
+            @if (posterUrl()) {
+                <div class="poster-preview">
+                    <img [src]="posterUrl()" alt="Affiche du film" />
+                </div>
+            }
+
+            <button class="btn btn-warning" type="submit" [disabled]="movieForm.invalid">Ajouter</button>
+        </form>
     </div>
 </div>
