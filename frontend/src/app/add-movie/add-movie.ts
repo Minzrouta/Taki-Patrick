@@ -1,70 +1,82 @@
-import { Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { Movie } from '../models/movie';
-import { FormsModule } from '@angular/forms';
 import { MoviesApi } from '../services/movies-api';
 import { Router } from '@angular/router';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-add-movie',
-  imports: [FormsModule],
+  imports: [ReactiveFormsModule],
   templateUrl: './add-movie.html',
   styleUrl: './add-movie.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AddMovie {
-  constructor(private router: Router) {}
-
-  movie: Movie = {
-    title: '',
-    director: '',
-    releaseDate: new Date(),
-    synopsis: '',
-    id: undefined,
-    rate: undefined,
-    image: undefined,
-  };
-
-  searchTitle = '';
-  searching = false;
-  searchError = '';
-  selectedFile: File | null = null;
-  previewUrl: string | null = null;
-
+  private readonly router = inject(Router);
   private readonly moviesApi = inject(MoviesApi);
+
+  searchControl = new FormControl('');
+  searching = signal(false);
+  searchError = signal('');
+  posterUrl = signal<string | undefined>(undefined);
+  selectedFile = signal<File | null>(null);
+
+  movieForm = new FormGroup({
+    title:       new FormControl('', [Validators.required]),
+    director:    new FormControl('', [Validators.required]),
+    releaseDate: new FormControl('', [Validators.required]),
+    synopsis:    new FormControl('', [Validators.required]),
+  });
 
   onFileSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
     if (input.files?.length) {
-      this.selectedFile = input.files[0];
-      this.previewUrl = URL.createObjectURL(this.selectedFile);
+      const file = input.files[0];
+      this.selectedFile.set(file);
+      this.posterUrl.set(URL.createObjectURL(file));
     }
   }
 
   searchMovie(): void {
-    if (!this.searchTitle.trim()) return;
-    this.searching = true;
-    this.searchError = '';
+    const title = this.searchControl.value?.trim();
+    if (!title) return;
+    this.searching.set(true);
+    this.searchError.set('');
 
-    this.moviesApi.searchMovieByTitle(this.searchTitle).subscribe({
+    this.moviesApi.searchMovieByTitle(title).subscribe({
       next: (result) => {
-        this.movie.title = result.title;
-        this.movie.director = result.director ?? '';
-        this.movie.synopsis = result.synopsis ?? '';
-        this.movie.releaseDate = result.releaseDate ? new Date(result.releaseDate) : new Date();
-        this.previewUrl = result.posterUrl ?? null;
-        this.movie.image = undefined;
-        this.searching = false;
+        this.movieForm.patchValue({
+          title:       result.title,
+          director:    result.director ?? '',
+          synopsis:    result.synopsis ?? '',
+          releaseDate: result.releaseDate
+            ? new Date(result.releaseDate).toISOString().split('T')[0]
+            : '',
+        });
+        this.posterUrl.set(result.posterUrl ?? undefined);
+        this.selectedFile.set(null);
+        this.searching.set(false);
       },
       error: () => {
-        this.searchError = 'Film non trouvé. Remplis les champs manuellement.';
-        this.searching = false;
+        this.searchError.set('Film non trouvé. Remplis les champs manuellement.');
+        this.searching.set(false);
       },
     });
   }
 
   addMovie(): void {
-    this.moviesApi.addMovie(this.movie).subscribe((created) => {
-      if (this.selectedFile && created.id) {
-        this.moviesApi.uploadImage(created.id, this.selectedFile).subscribe(() =>
+    if (this.movieForm.invalid) return;
+    const { title, director, releaseDate, synopsis } = this.movieForm.value;
+    const movie: Movie = {
+      title:       title!,
+      director:    director!,
+      releaseDate: new Date(releaseDate!),
+      synopsis:    synopsis!,
+    };
+    this.moviesApi.addMovie(movie).subscribe((created: Movie) => {
+      const file = this.selectedFile();
+      if (file && created.id) {
+        this.moviesApi.uploadImage(created.id, file).subscribe(() =>
           this.router.navigate(['/movies'])
         );
       } else {
