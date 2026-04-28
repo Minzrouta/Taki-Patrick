@@ -1,3 +1,5 @@
-@for (stat of items; track stat.title) {
-<app-stats-card [stat]=stat></app-stats-card>
-}
+<div class="stat-grid">
+    @for (stat of items; track stat.title) {
+    <app-stats-card [stat]=stat></app-stats-card>
+    }
+</div>
