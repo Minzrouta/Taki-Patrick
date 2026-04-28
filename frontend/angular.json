@@ -52,6 +52,7 @@
               }
             ],
             "styles": [
+              "node_modules/ngx-toastr/toastr.css",
               "src/styles.scss"
             ]
           },
@@ -60,8 +61,8 @@
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "500kB",
-                  "maximumError": "1MB"
+                  "maximumWarning": "1MB",
+                  "maximumError": "2MB"
                 },
                 {
                   "type": "anyComponentStyle",
@@ -113,11 +114,15 @@
               }
             ],
             "styles": [
+              "node_modules/ngx-toastr/toastr.css",
               "src/styles.scss"
             ]
           }
         }
       }
     }
+  },
+  "cli": {
+    "analytics": false
   }
 }

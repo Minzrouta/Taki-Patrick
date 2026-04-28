@@ -1,17 +1,20 @@
-<div class="form-all d-flex w-100">
-    <div class="form-movie flex-column w-50">
+<div class="add-movie-page">
+    <div class="add-movie-card">
+
+        <h2 class="card-title">Ajouter un film</h2>
 
         <div class="search-section">
-            <label for="search">Rechercher un film automatiquement</label>
+            <label class="field-label" for="search">Rechercher automatiquement</label>
             <div class="search-row">
                 <input
+                    class="field-input"
                     type="text"
                     id="search"
                     [formControl]="searchControl"
                     placeholder="Ex: Inception, Avatar..."
                     (keydown.enter)="searchMovie()"
                 />
-                <button class="btn btn-secondary" (click)="searchMovie()" [disabled]="searching()">
+                <button class="btn-brand" (click)="searchMovie()" [disabled]="searching()">
                     {{ searching() ? 'Recherche...' : 'Rechercher' }}
                 </button>
             </div>
@@ -20,61 +23,57 @@
             }
         </div>
 
-        <hr />
+        <div class="divider"><span>ou remplis manuellement</span></div>
 
-        <form [formGroup]="movieForm" (ngSubmit)="addMovie()">
-            <div>
-                <label for="title">Titre</label>
-                <input type="text" id="title" formControlName="title" />
-                @if (movieForm.get('title')?.invalid && movieForm.get('title')?.touched) {
-                    <ul class="error-list">
-                        <li>Le titre est obligatoire</li>
-                    </ul>
+        <div class="form-body">
+            <form [formGroup]="movieForm" (ngSubmit)="addMovie()">
+
+                @if (posterUrl()) {
+                    <div class="poster-preview">
+                        <img [src]="posterUrl()" alt="Affiche du film" />
+                    </div>
                 }
-            </div>
 
-            <div>
-                <label for="releaseDate">Date de réalisation</label>
-                <input type="date" id="releaseDate" formControlName="releaseDate" />
-                @if (movieForm.get('releaseDate')?.invalid && movieForm.get('releaseDate')?.touched) {
-                    <ul class="error-list">
-                        <li>La date est obligatoire</li>
-                    </ul>
-                }
-            </div>
-
-            <div>
-                <label for="director">Réalisateur</label>
-                <input type="text" id="director" formControlName="director" />
-                @if (movieForm.get('director')?.invalid && movieForm.get('director')?.touched) {
-                    <ul class="error-list">
-                        <li>Le réalisateur est obligatoire</li>
-                    </ul>
-                }
-            </div>
-
-            <div>
-                <label for="synopsis">Synopsis</label>
-                <textarea id="synopsis" formControlName="synopsis" rows="4"></textarea>
-                @if (movieForm.get('synopsis')?.invalid && movieForm.get('synopsis')?.touched) {
-                    <ul class="error-list">
-                        <li>Le synopsis est obligatoire</li>
-                    </ul>
-                }
-            </div>
-
-            <div>
-                <label for="image">Affiche du film</label>
-                <input type="file" id="image" accept="image/*" (change)="onFileSelected($event)" class="form-control" />
-            </div>
-
-            @if (posterUrl()) {
-                <div class="poster-preview">
-                    <img [src]="posterUrl()" alt="Affiche du film" />
+                <div class="field-group">
+                    <label class="field-label" for="title">Titre</label>
+                    <input class="field-input" type="text" id="title" formControlName="title" placeholder="Titre du film" />
+                    @if (movieForm.get('title')?.invalid && movieForm.get('title')?.touched) {
+                        <p class="field-error">Le titre est obligatoire</p>
+                    }
                 </div>
-            }
 
-            <button class="btn btn-warning" type="submit" [disabled]="movieForm.invalid">Ajouter</button>
-        </form>
+                <div class="field-group">
+                    <label class="field-label" for="releaseDate">Date de sortie</label>
+                    <input class="field-input" type="date" id="releaseDate" formControlName="releaseDate" />
+                    @if (movieForm.get('releaseDate')?.invalid && movieForm.get('releaseDate')?.touched) {
+                        <p class="field-error">La date est obligatoire</p>
+                    }
+                </div>
+
+                <div class="field-group">
+                    <label class="field-label" for="director">Réalisateur</label>
+                    <input class="field-input" type="text" id="director" formControlName="director" placeholder="Nom du réalisateur" />
+                    @if (movieForm.get('director')?.invalid && movieForm.get('director')?.touched) {
+                        <p class="field-error">Le réalisateur est obligatoire</p>
+                    }
+                </div>
+
+                <div class="field-group">
+                    <label class="field-label" for="synopsis">Synopsis</label>
+                    <textarea class="field-input" id="synopsis" formControlName="synopsis" rows="4" placeholder="Résumé du film..."></textarea>
+                    @if (movieForm.get('synopsis')?.invalid && movieForm.get('synopsis')?.touched) {
+                        <p class="field-error">Le synopsis est obligatoire</p>
+                    }
+                </div>
+
+                <div class="field-group">
+                    <label class="field-label" for="image">Affiche du film</label>
+                    <input class="field-input file-input" type="file" id="image" accept="image/*" (change)="onFileSelected($event)" />
+                </div>
+
+                <button class="btn-brand-full" type="submit" [disabled]="movieForm.invalid">Ajouter le film</button>
+            </form>
+        </div>
+
     </div>
 </div>
