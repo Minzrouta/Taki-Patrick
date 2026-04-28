@@ -1,13 +1,12 @@
 import { Component, inject } from '@angular/core';
 import { MoviesApi } from '../services/movies-api';
-import { Movie } from '../models/movie';
-import { Observable } from 'rxjs';
 import { ReviewsApi } from '../services/reviews-api';
 import { UsersApi } from '../services/user-api';
+import { StatsCard } from './stats-card/stats-card';
 
 @Component({
   selector: 'app-panel-admin',
-  imports: [],
+  imports: [StatsCard],
   templateUrl: './panel-admin.html',
   styleUrl: './panel-admin.scss',
 })
