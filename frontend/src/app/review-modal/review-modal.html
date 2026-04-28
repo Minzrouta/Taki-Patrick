@@ -1,0 +1,54 @@
+<div class="modal-backdrop" (click)="closed.emit()"></div>
+
+<div class="modal d-block" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered" (click)="$event.stopPropagation()">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h5 class="modal-title">
+          {{ existingReview ? 'Modifier ma note' : 'Noter' }} — {{ movie.title }}
+        </h5>
+        <button type="button" class="btn-close" (click)="closed.emit()"></button>
+      </div>
+
+      <div class="modal-body">
+        <div class="star-row mb-3">
+          @for (i of stars; track i) {
+            <span class="star-pair">
+              <i class="bi star-icon"
+                 [class]="starIcon(i, true)"
+                 (mouseenter)="hoveredRate.set(i - 0.5)"
+                 (mouseleave)="hoveredRate.set(0)"
+                 (click)="setRate(i - 0.5)"></i>
+              <i class="bi star-icon"
+                 [class]="starIcon(i, false)"
+                 (mouseenter)="hoveredRate.set(i)"
+                 (mouseleave)="hoveredRate.set(0)"
+                 (click)="setRate(i)"></i>
+            </span>
+          }
+          <span class="ms-2 text-muted">{{ selectedRate() }}/5</span>
+        </div>
+
+        <textarea
+          class="form-control"
+          rows="3"
+          placeholder="Commentaire (facultatif)"
+          [value]="comment()"
+          (input)="comment.set($any($event.target).value)">
+        </textarea>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn btn-secondary" (click)="closed.emit()">Annuler</button>
+        <button
+          class="btn btn-warning"
+          (click)="submit()"
+          [disabled]="selectedRate() === 0 || submitting()">
+          {{ submitting() ? 'Envoi...' : 'Envoyer' }}
+        </button>
+      </div>
+
+    </div>
+  </div>
+</div>
