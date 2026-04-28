@@ -3,7 +3,7 @@ services:
   app:
     image: app:latest
     build:
-        context: allocine-exemple-webb-app
+        context: backend
     depends_on:
       database:
         condition: service_healthy
