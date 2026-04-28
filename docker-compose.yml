@@ -15,6 +15,8 @@ services:
       - db
     ports:
       - "8082:8080"
+    volumes:
+      - backend-assets:/allo_cine/assets
     restart: unless-stopped
 
   frontend:
@@ -53,3 +55,4 @@ networks:
   db:
 volumes:
   db-data:
+  backend-assets:
