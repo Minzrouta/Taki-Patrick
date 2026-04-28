@@ -3,7 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Movie } from '../models/movie';
 import { MoviesApi } from '../services/movies-api';
 import { FormsModule } from '@angular/forms';
-import { Observable } from 'rxjs';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-edit-movie',
@@ -12,8 +12,10 @@ import { Observable } from 'rxjs';
   styleUrl: './edit-movie.scss',
 })
 export class EditMovie {
-  constructor(private router: Router) { }
+  private router = inject(Router);
+  private toasterService = inject(ToastrService);
   private route = inject(ActivatedRoute);
+
   id = this.route.snapshot.params['id'];
   private readonly moviesApi = inject(MoviesApi);
   selectedFile: File | null = null;
@@ -51,15 +53,20 @@ export class EditMovie {
 
   editMovie(id: number | undefined): void {
     if (id == undefined) {
+      this.toasterService.error('Erreur lors de la mise à jour');
       this.router.navigate(['/movies']);
       return;
     }
     this.moviesApi.editMovie(id, this.editedMovie).subscribe(() => {
       if (this.selectedFile) {
         this.moviesApi.uploadImage(id, this.selectedFile).subscribe(() =>
-          this.router.navigate(['/movies'])
+          {
+            this.toasterService.success('Film mis à jour avec succès !')
+            this.router.navigate(['/movies'])
+          }
         );
       } else {
+        this.toasterService.error('Aucune image sélectionnée')
         this.router.navigate(['/movies']);
       }
     });
