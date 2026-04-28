@@ -3,7 +3,7 @@ services:
   backend:
     image: taki-backend:latest
     build:
-      context: ./backend
+        context: backend
     depends_on:
       database:
         condition: service_healthy
