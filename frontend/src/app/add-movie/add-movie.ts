@@ -26,8 +26,18 @@ export class AddMovie {
   searchTitle = '';
   searching = false;
   searchError = '';
+  selectedFile: File | null = null;
+  previewUrl: string | null = null;
 
   private readonly moviesApi = inject(MoviesApi);
+
+  onFileSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (input.files?.length) {
+      this.selectedFile = input.files[0];
+      this.previewUrl = URL.createObjectURL(this.selectedFile);
+    }
+  }
 
   searchMovie(): void {
     if (!this.searchTitle.trim()) return;
@@ -40,7 +50,8 @@ export class AddMovie {
         this.movie.director = result.director ?? '';
         this.movie.synopsis = result.synopsis ?? '';
         this.movie.releaseDate = result.releaseDate ? new Date(result.releaseDate) : new Date();
-        this.movie.image = result.posterUrl ?? undefined;
+        this.previewUrl = result.posterUrl ?? null;
+        this.movie.image = undefined;
         this.searching = false;
       },
       error: () => {
@@ -51,6 +62,14 @@ export class AddMovie {
   }
 
   addMovie(): void {
-    this.moviesApi.addMovie(this.movie).subscribe(() => this.router.navigate(['/movies']));
+    this.moviesApi.addMovie(this.movie).subscribe((created) => {
+      if (this.selectedFile && created.id) {
+        this.moviesApi.uploadImage(created.id, this.selectedFile).subscribe(() =>
+          this.router.navigate(['/movies'])
+        );
+      } else {
+        this.router.navigate(['/movies']);
+      }
+    });
   }
 }

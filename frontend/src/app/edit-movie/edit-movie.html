@@ -8,6 +8,13 @@
         <input type="text" id="director" name="director" [(ngModel)]="editedMovie.director" />
         <label for="synopsis">Synopsis</label>
         <input type="text" id="synopsis" name="synopsis" [(ngModel)]="editedMovie.synopsis" />
-        <button class="btn btn-warning" (click)=editMovie(editedMovie.id)>Mettre à jour</button>
+        <label for="image">Changer l'affiche</label>
+        <input type="file" id="image" name="image" accept="image/*" (change)="onFileSelected($event)" class="form-control" />
+        @if (editedMovie.image) {
+            <div class="poster-preview mt-2">
+                <img [src]="'/movies/' + editedMovie.id + '/image'" alt="Affiche actuelle" />
+            </div>
+        }
+        <button class="btn btn-warning mt-2" (click)="editMovie(editedMovie.id)">Mettre à jour</button>
     </div>
 </div>

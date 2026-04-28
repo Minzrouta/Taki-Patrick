@@ -16,6 +16,8 @@ export class EditMovie {
   private route = inject(ActivatedRoute);
   id = this.route.snapshot.params['id'];
   private readonly moviesApi = inject(MoviesApi);
+  selectedFile: File | null = null;
+
   editedMovie: Movie = {
     title: '',
     director: '',
@@ -25,6 +27,7 @@ export class EditMovie {
     rate: undefined,
     image: undefined
   }
+
   ngOnInit(): void {
     this.moviesApi.getMovie(this.id).subscribe(movie => {
       this.editedMovie = {
@@ -34,18 +37,31 @@ export class EditMovie {
         synopsis: movie.synopsis,
         id: movie.id,
         rate: undefined,
-        image: undefined
+        image: movie.image
       };
     });
   }
+
+  onFileSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (input.files?.length) {
+      this.selectedFile = input.files[0];
+    }
+  }
+
   editMovie(id: number | undefined): void {
-    if (id != undefined) {
-      this.moviesApi.editMovie(id, this.editedMovie).subscribe(() =>
-        this.router.navigate(['/movies'])
-      );
-    }
-    else {
+    if (id == undefined) {
       this.router.navigate(['/movies']);
+      return;
     }
+    this.moviesApi.editMovie(id, this.editedMovie).subscribe(() => {
+      if (this.selectedFile) {
+        this.moviesApi.uploadImage(id, this.selectedFile).subscribe(() =>
+          this.router.navigate(['/movies'])
+        );
+      } else {
+        this.router.navigate(['/movies']);
+      }
+    });
   }
 }

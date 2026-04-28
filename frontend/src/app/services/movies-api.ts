@@ -42,4 +42,10 @@ export class MoviesApi {
   getMovieByTmdbId(tmdbId: number): Observable<MovieSearchResult> {
     return this.httpClient.get<MovieSearchResult>(`${this.url}/tmdb/${tmdbId}`);
   }
+
+  uploadImage(id: number, file: File): Observable<void> {
+    const form = new FormData();
+    form.append('filmImage', file);
+    return this.httpClient.put<void>(`${this.url}/${id}/image`, form);
+  }
 }
