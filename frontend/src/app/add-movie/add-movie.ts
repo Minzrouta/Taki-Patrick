@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { from, of, switchMap } from 'rxjs';
 import { Movie } from '../models/movie';
 import { MoviesApi } from '../services/movies-api';
 import { Router } from '@angular/router';
@@ -73,15 +74,24 @@ export class AddMovie {
       releaseDate: new Date(releaseDate!),
       synopsis:    synopsis!,
     };
-    this.moviesApi.addMovie(movie).subscribe((created: Movie) => {
-      const file = this.selectedFile();
-      if (file && created.id) {
-        this.moviesApi.uploadImage(created.id, file).subscribe(() =>
-          this.router.navigate(['/movies'])
-        );
-      } else {
-        this.router.navigate(['/movies']);
-      }
-    });
+
+    this.moviesApi.addMovie(movie).pipe(
+      switchMap((created) => {
+        if (!created.id) return of(undefined);
+        const file = this.selectedFile();
+        if (file) return this.moviesApi.uploadImage(created.id, file);
+        const posterUrl = this.posterUrl();
+        if (posterUrl) {
+          return from(fetch(posterUrl).then((r) => r.blob())).pipe(
+            switchMap((blob) => {
+              const filename = posterUrl.split('/').pop() ?? 'poster.jpg';
+              const f = new File([blob], filename, { type: 'image/jpeg' });
+              return this.moviesApi.uploadImage(created.id!, f);
+            }),
+          );
+        }
+        return of(undefined);
+      }),
+    ).subscribe(() => this.router.navigate(['/movies']));
   }
 }
