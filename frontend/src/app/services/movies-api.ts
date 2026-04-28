@@ -2,6 +2,8 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Movie } from '../models/movie';
+import { MovieSearchResult } from '../models/movie-search-result';
+import { MovieSuggestion } from '../models/movie-suggestion';
 
 @Injectable({
   providedIn: 'root',
@@ -23,5 +25,21 @@ export class MoviesApi {
   }
   getMovie(id: number): Observable<Movie> {
     return this.httpClient.get<Movie>(`${this.url}/${id}`);
+  }
+
+  searchMovieByTitle(title: string): Observable<MovieSearchResult> {
+    return this.httpClient.get<MovieSearchResult>(`${this.url}/search`, { params: { title } });
+  }
+
+  getSuggestions(query: string): Observable<MovieSuggestion[]> {
+    return this.httpClient.get<MovieSuggestion[]>(`${this.url}/suggestions`, { params: { query } });
+  }
+
+  getPopularMovies(): Observable<MovieSuggestion[]> {
+    return this.httpClient.get<MovieSuggestion[]>(`${this.url}/popular`);
+  }
+
+  getMovieByTmdbId(tmdbId: number): Observable<MovieSearchResult> {
+    return this.httpClient.get<MovieSearchResult>(`${this.url}/tmdb/${tmdbId}`);
   }
 }
