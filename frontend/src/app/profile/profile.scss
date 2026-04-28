@@ -1,1 +1,18 @@
 // ProfilePage styles
+
+.profile-movie-card {
+  width: 12rem;
+}
+
+.profile-movie-img {
+  height: 160px;
+  object-fit: cover;
+}
+
+.profile-movie-title {
+  font-size: 0.85rem;
+}
+
+.profile-movie-rating {
+  font-size: 0.8rem;
+}

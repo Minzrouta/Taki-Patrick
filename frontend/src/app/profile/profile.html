@@ -16,25 +16,24 @@
     } @else {
       <div class="d-flex flex-wrap gap-3">
         @for (review of reviews(); track review.id) {
-          <div class="card" style="width: 12rem">
+          <div class="card profile-movie-card">
             @if (review.movie?.image) {
               <img [src]="'/movies/' + review.movie.id + '/image'"
-                   class="card-img-top"
-                   style="height: 160px; object-fit: cover"
-                   alt="" />
+                   class="card-img-top profile-movie-img"
+                   [attr.alt]="review.movie?.title ?? ''" />
             }
             <div class="card-body p-2">
-              <p class="card-title fw-bold mb-1" style="font-size: 0.85rem">
+              <p class="card-title fw-bold mb-1 profile-movie-title">
                 {{ review.movie?.title }}
               </p>
               <span class="text-warning">
-                @for (i of [1,2,3,4,5]; track i) {
+                @for (i of stars; track i) {
                   <i class="bi"
                      [class]="review.rate >= i ? 'bi-star-fill' : review.rate >= i - 0.5 ? 'bi-star-half' : 'bi-star'">
                   </i>
                 }
               </span>
-              <span class="text-muted ms-1" style="font-size: 0.8rem">{{ review.rate }}/5</span>
+              <span class="text-muted ms-1 profile-movie-rating">{{ review.rate }}/5</span>
             </div>
           </div>
         }
