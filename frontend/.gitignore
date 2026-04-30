@@ -42,6 +42,3 @@ __screenshots__/
 .DS_Store
 Thumbs.db
 
-# Firebase config (ne pas committer les vraies valeurs)
-/src/environments/environment.ts
-!/src/environments/environment.example.ts
