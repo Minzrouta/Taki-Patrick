@@ -3,7 +3,7 @@ services:
   backend:
     image: taki-backend:latest
     build:
-        context: backend
+      context: backend
     depends_on:
       database:
         condition: service_healthy
@@ -13,21 +13,31 @@ services:
       POSTGRES_DB: ${DB_NAME:-defaultdb}
     networks:
       - db
-    ports:
-      - "8082:8080"
+      - coolify
     volumes:
       - backend-assets:/allo_cine/assets
     restart: unless-stopped
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.taki-backend.rule=Host(`takicine.bantou.me`,`takipatrick.bantou.me`,`takipipou.bantou.me`) && PathPrefix(`/movies`)
+      - traefik.http.routers.taki-backend.entrypoints=https
+      - traefik.http.routers.taki-backend.tls.certresolver=letsencrypt
+      - traefik.http.services.taki-backend.loadbalancer.server.port=8080
 
   frontend:
     image: taki-frontend:latest
     build:
       context: ./frontend
-    ports:
-      - "4280:80"
     networks:
       - db
+      - coolify
     restart: unless-stopped
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.taki-frontend.rule=Host(`takicine.bantou.me`,`takipatrick.bantou.me`,`takipipou.bantou.me`)
+      - traefik.http.routers.taki-frontend.entrypoints=https
+      - traefik.http.routers.taki-frontend.tls.certresolver=letsencrypt
+      - traefik.http.services.taki-frontend.loadbalancer.server.port=80
 
   database:
     container_name: taki_database
@@ -42,17 +52,16 @@ services:
     volumes:
       - db-data:/var/lib/postgresql/data
     healthcheck:
-      test:
-        [
-          "CMD-SHELL",
-          "sh -c 'pg_isready -U ${DB_USERNAME:-root} -d ${DB_NAME:-defaultdb}'",
-        ]
+      test: ["CMD-SHELL", "sh -c 'pg_isready -U ${DB_USERNAME:-root} -d ${DB_NAME:-defaultdb}'"]
       interval: 10s
       timeout: 3s
       retries: 3
 
 networks:
   db:
+  coolify:
+    external: true
+
 volumes:
   db-data:
   backend-assets:
