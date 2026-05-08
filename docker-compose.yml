@@ -19,6 +19,7 @@ services:
     restart: unless-stopped
     labels:
       - traefik.enable=true
+      - traefik.docker.network=coolify
       - traefik.http.routers.taki-backend.rule=(Host(`takicine.bantou.me`) || Host(`takipatrick.bantou.me`) || Host(`takipipou.bantou.me`)) && PathPrefix(`/movies`)
       - traefik.http.routers.taki-backend.entrypoints=https
       - traefik.http.routers.taki-backend.tls.certresolver=letsencrypt
@@ -34,6 +35,7 @@ services:
     restart: unless-stopped
     labels:
       - traefik.enable=true
+      - traefik.docker.network=coolify
       - traefik.http.routers.taki-frontend.rule=Host(`takicine.bantou.me`) || Host(`takipatrick.bantou.me`) || Host(`takipipou.bantou.me`)
       - traefik.http.routers.taki-frontend.entrypoints=https
       - traefik.http.routers.taki-frontend.tls.certresolver=letsencrypt
