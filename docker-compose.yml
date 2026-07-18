@@ -5,12 +5,14 @@ services:
     build:
       context: backend
     depends_on:
-      database:
+      taki-db:
         condition: service_healthy
     environment:
       POSTGRES_USER: ${DB_USERNAME:-root}
       POSTGRES_PASSWORD: ${DB_PASSWORD:-toor}
       POSTGRES_DB: ${DB_NAME:-defaultdb}
+      # Nom de service unique : évite la collision de l'alias "database" sur le réseau coolify partagé
+      DB_URL: jdbc:postgresql://taki-db:5432/defaultdb
     networks:
       - db
       - coolify
@@ -41,7 +43,7 @@ services:
       - traefik.http.routers.taki-frontend.tls.certresolver=letsencrypt
       - traefik.http.services.taki-frontend.loadbalancer.server.port=80
 
-  database:
+  taki-db:
     container_name: taki_database
     image: postgres:15.2-alpine
     restart: always
